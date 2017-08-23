@@ -1,0 +1,16 @@
+#!/bin/sh
+
+while [ $# -ne 0 ]; do
+    case $1 in
+        --with-compiler=*)
+            v=`${1#--with-compiler=} --numeric-version`
+            cat > phook.buildinfo <<EOF
+extra-lib-dirs: $(stack eval --package ghc-paths GHC.Paths.libdir | tr -d '"')/rts/
+extra-libraries: HSrts_thr-ghc$v
+EOF
+            break
+        ;;
+        *)
+            shift
+    esac
+done
